@@ -1,0 +1,8 @@
+---
+
+- name: Setup SRCDS VM
+  hosts: srcds
+  user: vagrant
+  roles:
+    - srcds
+  gather_facts: false
