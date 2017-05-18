@@ -19,26 +19,17 @@ Vagrant.configure("2") do |config|
   # `vagrant box outdated`. This is not recommended.
   # config.vm.box_check_update = false
 
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
-
   config.vm.define "srcds", primary: true, autostart: true do |srcds|
     # Create a forwarded port mapping which allows access to a specific port
     # within the machine from a port on the host machine. In the example below,
     # accessing "localhost:8080" will access port 80 on the guest machine.
+    # NOTE: This will enable public access to the opened port
     # srcds.vm.network "forwarded_port", guest: 80, host: 8080
+
+    # Create a forwarded port mapping which allows access to a specific port
+    # within the machine from a port on the host machine and only allow access
+    # via 127.0.0.1 to disable public access
+    # srcds.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
@@ -56,6 +47,25 @@ Vagrant.configure("2") do |config|
     # srcds.vm.synced_folder "../data", "/vagrant_data"
   end
 
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  # config.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+  #
+  #   # Customize the amount of memory on the VM:
+  #   vb.memory = "1024"
+  # end
+  #
+  # View the documentation for the provider you are using for more
+  # information on available options.
+  config.vm.provider "virtualbox" do |vb|
+    # Disable console.log file
+    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
+
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
   # such as FTP and Heroku are also available. See the documentation at
   # https://docs.vagrantup.com/v2/push/atlas.html for more information.
@@ -70,7 +80,6 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "provisioning/playbook.yml"
   end
