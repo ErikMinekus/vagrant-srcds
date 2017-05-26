@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
+  config.vm.box_check_update = false
 
   config.vm.define "srcds", primary: true, autostart: true do |srcds|
     # Create a forwarded port mapping which allows access to a specific port
@@ -62,6 +62,10 @@ Vagrant.configure("2") do |config|
   # View the documentation for the provider you are using for more
   # information on available options.
   config.vm.provider "virtualbox" do |vb|
+    # Customize the amount of CPUs and memory on the VM:
+    vb.cpus   = "1"
+    vb.memory = "512"
+
     # Disable console.log file
     vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
   end
