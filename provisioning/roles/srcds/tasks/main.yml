@@ -1,11 +1,11 @@
 ---
 
-- name: Installing Python 2.7
-  raw: test -e /usr/bin/python || (apt update -y && apt install -y python-minimal)
-  become: true
-
 - name: Set hostname
   hostname: name={{ hostname }}
+  become: true
+
+- name: Add i386 architecture
+  lineinfile: path=/var/lib/dpkg/arch line=i386 create=yes
   become: true
 
 - name: Updating package sources information
@@ -13,12 +13,9 @@
   become: true
 
 - name: Accepting SteamCMD license
-  debconf: name=steamcmd question=steam/question vtype=string value="I AGREE"
+  debconf: name=steamcmd question=steam/question vtype=select value="I AGREE"
   become: true
 
 - name: Installing base packages
-  apt: state=latest name={{ item }}
+  apt: state=latest name={{ packages }}
   become: true
-  with_items:
-    - steamcmd
-    - vim

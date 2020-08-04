@@ -1,3 +1,11 @@
 ---
 
 hostname: srcds
+
+packages:
+  - lib32gcc1
+  - lib32tinfo5
+  - libstdc++6:i386
+  - steamcmd
+  - vim
+  - zlib1g:i386
